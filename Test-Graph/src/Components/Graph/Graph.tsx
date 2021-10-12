@@ -5,7 +5,12 @@ import * as users from "../../data/users_profile.json";
 import * as routes from "../../data/users_edges.json";
 
 import { userDataT, CorrectPointDataT } from "../../models/userData";
-import { RouteDataT, CorrectRouteDataT } from "../../models/routesData";
+import {
+  RouteDataT,
+  CorrectRouteDataT,
+  DefaultRouteT,
+  PointT,
+} from "../../models/routesData";
 
 const Graph = () => {
   const correctUserArray = (users as unknown as { default: userDataT[] })
@@ -37,7 +42,7 @@ const Graph = () => {
     links,
   };
 
-  const returnCurrentColor = (source: any, target: any) =>
+  const returnCurrentColor = (source: PointT, target: PointT) =>
     links.find(
       (item: CorrectRouteDataT) =>
         item.source === source && item.target === target
@@ -47,11 +52,13 @@ const Graph = () => {
     <>
       <ForceGraph3D
         graphData={gData}
-        linkColor={(item) =>
+        linkColor={(item: DefaultRouteT) =>
           returnCurrentColor(item.source, item.target).linkColor
         }
         linkOpacity={1}
-        linkWidth={(item) => returnCurrentColor(item.source, item.target).width}
+        linkWidth={(item: DefaultRouteT) =>
+          returnCurrentColor(item.source, item.target).width
+        }
       />
     </>
   );
