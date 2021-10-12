@@ -26085,7 +26085,7 @@
     "username": "name1038",
     "merchant_status": "blocked",
     "blocked_by": "name1509",
-    "merchant_reason": "bot_account",§
+    "merchant_reason": "bot_account",
     "forter_status": "bad",
     "forter_reason": "linked_to_bad_accounts",
     "connection_strength": "strong",
