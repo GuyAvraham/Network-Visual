@@ -1,0 +1,17 @@
+https://www.monterail.com/blog/javascript-libraries-data-visualization
+
+
+1. https://www.npmjs.com/package/react-force-graph-3d
+https://www.youtube.com/watch?v=QGJbJAopX-s
+
+2. D3.js
+
+3. React-vis
+
+4. Echarts
+
+5. https://visjs.org/
+https://github.com/visjs/vis-network
+
+
+create a new react app in this directory
