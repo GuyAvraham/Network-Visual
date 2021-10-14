@@ -38,6 +38,7 @@ function App() {
     const svg = d3.select("svg");
     const height = parseInt(svg.attr("height"));
     const width = parseInt(svg.attr("width"));
+    const radius = 10;
 
     console.log({ height, width });
 
@@ -56,19 +57,54 @@ function App() {
       .data(DATA.nodes)
       .enter()
       .append("circle")
-      .attr("r", 5)
+      .attr("r", radius)
       .attr("fill", () => "blue")
       .attr("stroke", "yellow");
 
     const ticked = () => {
-      link
-        .attr("x1", (d: any) => d.source.x)
-        .attr("y1", (d: any) => d.source.y)
-        .attr("x2", (d: any) => d.target.x)
-        .attr("y2", (d: any) => d.target.y);
+      node
+        .attr("cx", function (d: any) {
+          return (d.x = Math.max(radius, Math.min(width - radius, d.x)));
+        })
+        .attr("cy", function (d: any) {
+          return (d.y = Math.max(radius, Math.min(height - radius, d.y)));
+        });
 
-      node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
+      link
+        .attr("x1", function (d: any) {
+          return d.source.x;
+        })
+        .attr("y1", function (d: any) {
+          return d.source.y;
+        })
+        .attr("x2", function (d: any) {
+          return d.target.x;
+        })
+        .attr("y2", function (d: any) {
+          return d.target.y;
+        });
     };
+
+    const dragHandler = d3
+      .drag()
+      .on("start", (d, event: any) => {
+        if (!d3.active(d)) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", (d, event: any) => {
+        console.log("DRAGING");
+        console.log({ d, event });
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on("end", (d, event: any) => {
+        if (!d3.active(d)) simulation.alphaTarget(0);
+        d.fx = event.x;
+        d.fy = event.y;
+      });
+
+    dragHandler(node as any);
 
     const simulation = d3
       .forceSimulation<DataSimulation>(DATA.nodes)
@@ -79,7 +115,7 @@ function App() {
           .id((d: any) => d.name)
           .links(DATA.links)
       )
-      .force("charge", d3.forceManyBody().strength(-10))
+      .force("charge", d3.forceManyBody().strength(-1))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
   }, []);
@@ -94,7 +130,7 @@ function App() {
         height: "90vh",
       }}
     >
-      <svg id="area" height={1000} width={2000}></svg>
+      <svg id="area" height={800} width={1000}></svg>
     </div>
   );
 }
