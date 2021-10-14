@@ -13,7 +13,11 @@ const getLinks = () => {
       nodes.find((node) => node.name === userEdge.from) &&
       nodes.find((node) => node.name === userEdge.to)
     )
-      links.push({ source: userEdge.from, target: userEdge.to });
+      links.push({
+        source: userEdge.from,
+        target: userEdge.to,
+        width: userEdge.width,
+      });
   }
   return links;
 };
@@ -43,7 +47,7 @@ function App() {
       .data(DATA.links)
       .enter()
       .append("line")
-      .attr("stroke-width", (d) => 3) // needs to be changed to width from data
+      .attr("stroke-width", (d) => d.width * 3) // needs to be changed to width from data
       .style("stroke", "red");
 
     const node = svg
