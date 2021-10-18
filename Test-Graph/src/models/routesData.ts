@@ -5,6 +5,7 @@ export type RouteDataT = {
   from: string;
   width: number;
   color: string;
+  dashes?: string;
 };
 
 export type CorrectRouteDataT = {
@@ -12,6 +13,7 @@ export type CorrectRouteDataT = {
   target: string;
   linkColor: string;
   width: number;
+  dashes: boolean;
 };
 
 export type PointT = string | number | NodeObject | undefined;

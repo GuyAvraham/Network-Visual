@@ -37,6 +37,7 @@ const Graph = () => {
           target: item.to,
           linkColor: item.color,
           width: item.width,
+          dashes: item.dashes ? true : false,
         }))
         .filter(
           (item: CorrectRouteDataT) =>
@@ -66,11 +67,10 @@ const Graph = () => {
         2
       )
     );
-    console.log(currentUserData);
   };
 
-  return (
-    <>
+  const Graph3d = useMemo(
+    () => (
       <ForceGraph3D
         graphData={gData}
         linkColor={(item: DefaultRouteT) =>
@@ -78,17 +78,33 @@ const Graph = () => {
         }
         linkOpacity={1}
         linkWidth={(item: DefaultRouteT) =>
-          returnCurrentColor(item.source, item.target).width
+          returnCurrentColor(item.source, item.target).dashes
+            ? 0
+            : returnCurrentColor(item.source, item.target).width * 4
         }
+        linkDirectionalParticles={(item: DefaultRouteT) =>
+          returnCurrentColor(item.source, item.target).dashes ? 10 : 0
+        }
+        linkDirectionalParticleWidth={(item: DefaultRouteT) =>
+          returnCurrentColor(item.source, item.target).dashes ? 3 : 0
+        }
+        linkDirectionalParticleSpeed={0}
+        nodeColor={() => "#1F95FF"}
         onNodeClick={(item) => returnCurrentLabel(item.id)}
         nodeLabel={(item) => item.id as string}
       />
-      {isPopupShow && (
-        <NodeDataPopup
-          setIsPopupShow={setIsPopupShow}
-          currentUserData={currentUserData}
-        />
-      )}
+    ),
+    [users, routes]
+  );
+
+  return (
+    <>
+      {Graph3d}
+      <NodeDataPopup
+        setIsPopupShow={setIsPopupShow}
+        currentUserData={currentUserData}
+        isPopupShow={isPopupShow}
+      />
     </>
   );
 };
