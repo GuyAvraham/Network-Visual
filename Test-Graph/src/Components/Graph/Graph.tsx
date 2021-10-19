@@ -38,7 +38,7 @@ const Graph = ({
     .map((item: RouteDataT) => ({
       source: item.from,
       target: item.to,
-      linkColor: "white", // item.color,
+      linkColor: "white",
       width: item.width,
       dashes: item.dashes ? true : false,
     }))
