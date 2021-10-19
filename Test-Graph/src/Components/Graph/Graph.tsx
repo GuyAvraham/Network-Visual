@@ -1,7 +1,5 @@
-import React, { memo, useState, useMemo } from "react";
-import ForceGraph3D from "react-force-graph-3d";
-
-import { NodeDataPopup } from "../index";
+import React, { memo } from "react";
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 
 import * as users from "../../data/users_profile.json";
 import * as routes from "../../data/users_edges.json";
@@ -14,7 +12,17 @@ import {
   PointT,
 } from "../../models/routesData";
 
-const Graph = () => {
+interface GraphProps {
+  setCurrentUserData(data: string): void;
+  setIsPopupShow(data: boolean): void;
+  show2DGraph: boolean;
+}
+
+const Graph = ({
+  setCurrentUserData,
+  setIsPopupShow,
+  show2DGraph,
+}: GraphProps) => {
   const correctUserArray = (users as unknown as { default: userDataT[] })
     .default;
   const currentRoutesArray = (routes as unknown as { default: RouteDataT[] })
@@ -26,26 +34,19 @@ const Graph = () => {
     })
   );
 
-  const [currentUserData, setCurrentUserData] = useState<string>("");
-  const [isPopupShow, setIsPopupShow] = useState<boolean>(false);
-
-  const links: CorrectRouteDataT[] = useMemo(
-    () =>
-      currentRoutesArray
-        .map((item: RouteDataT) => ({
-          source: item.from,
-          target: item.to,
-          linkColor: item.color,
-          width: item.width,
-          dashes: item.dashes ? true : false,
-        }))
-        .filter(
-          (item: CorrectRouteDataT) =>
-            nodes.some((i: CorrectPointDataT) => i.id === item.source) &&
-            nodes.some((i: CorrectPointDataT) => i.id === item.target)
-        ),
-    [currentRoutesArray, nodes]
-  );
+  const links: CorrectRouteDataT[] = currentRoutesArray
+    .map((item: RouteDataT) => ({
+      source: item.from,
+      target: item.to,
+      linkColor: item.color,
+      width: item.width,
+      dashes: item.dashes ? true : false,
+    }))
+    .filter(
+      (item: CorrectRouteDataT) =>
+        nodes.some((i: CorrectPointDataT) => i.id === item.source) &&
+        nodes.some((i: CorrectPointDataT) => i.id === item.target)
+    );
 
   const gData = {
     nodes,
@@ -69,43 +70,28 @@ const Graph = () => {
     );
   };
 
-  const Graph3d = useMemo(
-    () => (
-      <ForceGraph3D
-        graphData={gData}
-        linkColor={(item: DefaultRouteT) =>
-          returnCurrentColor(item.source, item.target).linkColor
-        }
-        linkOpacity={1}
-        linkWidth={(item: DefaultRouteT) =>
-          returnCurrentColor(item.source, item.target).dashes
-            ? 0
-            : returnCurrentColor(item.source, item.target).width * 4
-        }
-        linkDirectionalParticles={(item: DefaultRouteT) =>
-          returnCurrentColor(item.source, item.target).dashes ? 10 : 0
-        }
-        linkDirectionalParticleWidth={(item: DefaultRouteT) =>
-          returnCurrentColor(item.source, item.target).dashes ? 3 : 0
-        }
-        linkDirectionalParticleSpeed={0}
-        nodeColor={() => "#1F95FF"}
-        onNodeClick={(item) => returnCurrentLabel(item.id)}
-        nodeLabel={(item) => item.id as string}
-      />
-    ),
-    [users, routes]
-  );
+  const commonData = {
+    graphData: gData,
+    linkColor: (item: DefaultRouteT) =>
+      returnCurrentColor(item.source, item.target).linkColor,
+    linkWidth: (item: DefaultRouteT) =>
+      returnCurrentColor(item.source, item.target).dashes
+        ? 0
+        : returnCurrentColor(item.source, item.target).width * 2,
+    linkDirectionalParticles: (item: DefaultRouteT) =>
+      returnCurrentColor(item.source, item.target).dashes ? 10 : 0,
+    linkDirectionalParticleWidth: (item: DefaultRouteT) =>
+      returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
+    linkDirectionalParticleSpeed: 0,
+    nodeColor: () => "#1F95FF",
+    onNodeClick: (item: any) => returnCurrentLabel(item.id),
+    nodeLabel: (item: any) => item.id as string,
+  };
 
-  return (
-    <>
-      {Graph3d}
-      <NodeDataPopup
-        setIsPopupShow={setIsPopupShow}
-        currentUserData={currentUserData}
-        isPopupShow={isPopupShow}
-      />
-    </>
+  return show2DGraph ? (
+    <ForceGraph2D {...commonData} />
+  ) : (
+    <ForceGraph3D {...commonData} linkOpacity={1} />
   );
 };
 

@@ -1,0 +1,6 @@
+.changeGraphButton {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}

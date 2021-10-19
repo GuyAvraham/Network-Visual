@@ -1,10 +1,10 @@
 import React from "react";
-import { Graph } from "../../Components";
+import GraphContainer from "./GraphContainer/GraphContainer";
 
 function App() {
   return (
     <div className="App">
-      <Graph />
+      <GraphContainer />
     </div>
   );
 }
