@@ -38,7 +38,7 @@ const Graph = ({
     .map((item: RouteDataT) => ({
       source: item.from,
       target: item.to,
-      linkColor: 'white', // item.color,
+      linkColor: "white", // item.color,
       width: item.width,
       dashes: item.dashes ? true : false,
     }))
@@ -83,7 +83,7 @@ const Graph = ({
     linkDirectionalParticleWidth: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
     linkDirectionalParticleSpeed: 0,
-    nodeColor: () => "#FFFFFF",
+    nodeColor: () => "#1F95FF",
     onNodeClick: (item: any) => returnCurrentLabel(item.id),
     nodeLabel: (item: any) => item.id as string,
   };
