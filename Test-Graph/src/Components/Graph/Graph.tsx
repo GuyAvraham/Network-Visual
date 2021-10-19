@@ -1,5 +1,6 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
+import * as THREE from "three";
 
 import * as users from "../../data/users_profile.json";
 import * as routes from "../../data/users_edges.json";
@@ -71,22 +72,28 @@ const Graph = ({
     );
   };
 
-  const returnCurrentNodeColor = (status: string) => {
-    switch (status) {
-      case "bad": {
-        return Math.random() > 0.4 ? "green" : "red";
+  const returnCurrentNodeColor = useMemo(
+    () => (status: string) => {
+      switch (status) {
+        case "bad": {
+          return "red";
+        }
+        case "good": {
+          return "green";
+        }
+        case "good": {
+          return "green";
+        }
+        case "suspicious": {
+          return "orange";
+        }
+        default: {
+          return "#1F95FF";
+        }
       }
-      case "good": {
-        return "green";
-      }
-      case "suspicious": {
-        return "orange";
-      }
-      default: {
-        return "#1F95FF";
-      }
-    }
-  };
+    },
+    [users]
+  );
 
   const commonData = {
     graphData: gData,
@@ -107,9 +114,38 @@ const Graph = ({
   };
 
   return show2DGraph ? (
-    <ForceGraph2D {...commonData} />
+    <ForceGraph2D {...commonData} backgroundColor="#000000" />
   ) : (
-    <ForceGraph3D {...commonData} linkOpacity={1} nodeThreeObject="square" />
+    <ForceGraph3D
+      {...commonData}
+      linkOpacity={1}
+      // nodeThreeObject={({ id }: any) =>
+      //   new THREE.Mesh(
+      //     [
+      //       new THREE.BoxGeometry(
+      //         Math.random() * 20,
+      //         Math.random() * 20,
+      //         Math.random() * 20
+      //       ),
+      //       new THREE.ConeGeometry(Math.random() * 10, Math.random() * 20),
+      //       new THREE.CylinderGeometry(
+      //         Math.random() * 10,
+      //         Math.random() * 10,
+      //         Math.random() * 20
+      //       ),
+      //       new THREE.DodecahedronGeometry(Math.random() * 10),
+      //       new THREE.SphereGeometry(Math.random() * 10),
+      //       new THREE.TorusGeometry(Math.random() * 10, Math.random() * 2),
+      //       new THREE.TorusKnotGeometry(Math.random() * 10, Math.random() * 2),
+      //     ][id % 7],
+      //     new THREE.MeshLambertMaterial({
+      //       color: Math.round(Math.random() * Math.pow(2, 24)),
+      //       transparent: true,
+      //       opacity: 0.75,
+      //     })
+      //   )
+      // }
+    />
   );
 };
 
