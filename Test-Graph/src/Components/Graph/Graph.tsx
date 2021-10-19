@@ -74,7 +74,7 @@ const Graph = ({
   const returnCurrentNodeColor = (status: string) => {
     switch (status) {
       case "bad": {
-        return "red";
+        return Math.random() > 0.4 ? "green" : "red";
       }
       case "good": {
         return "green";
@@ -109,7 +109,7 @@ const Graph = ({
   return show2DGraph ? (
     <ForceGraph2D {...commonData} />
   ) : (
-    <ForceGraph3D {...commonData} linkOpacity={1} />
+    <ForceGraph3D {...commonData} linkOpacity={1} nodeThreeObject="square" />
   );
 };
 
