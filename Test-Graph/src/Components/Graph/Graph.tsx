@@ -31,6 +31,7 @@ const Graph = ({
   const nodes: CorrectPointDataT[] = correctUserArray.map(
     (item: userDataT) => ({
       id: item.username,
+      forterStatus: item.forter_status,
     })
   );
 
@@ -70,6 +71,18 @@ const Graph = ({
     );
   };
 
+  const returnCurrentNodeColor = (status: string) => {
+    if (status === "bad") {
+      return "red";
+    } else if (status === "good") {
+      return "green";
+    } else if (status === "suspicious") {
+      return "orange";
+    } else {
+      return "white";
+    }
+  };
+
   const commonData = {
     graphData: gData,
     linkColor: (item: DefaultRouteT) =>
@@ -83,7 +96,7 @@ const Graph = ({
     linkDirectionalParticleWidth: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
     linkDirectionalParticleSpeed: 0,
-    nodeColor: () => "#1F95FF",
+    nodeColor: (item: any) => returnCurrentNodeColor(item.forterStatus),
     onNodeClick: (item: any) => returnCurrentLabel(item.id),
     nodeLabel: (item: any) => item.id as string,
   };

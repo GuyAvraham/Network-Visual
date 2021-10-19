@@ -26,4 +26,4 @@ export type userDataT = {
   group: number;
 };
 
-export type CorrectPointDataT = { id: string };
+export type CorrectPointDataT = { id: string, forterStatus: string };
