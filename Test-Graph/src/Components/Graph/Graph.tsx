@@ -83,7 +83,7 @@ const Graph = ({
     linkDirectionalParticleWidth: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
     linkDirectionalParticleSpeed: 0,
-    nodeColor: () => "#1F95FF",
+    nodeColor: () => "#FFFFFF",
     onNodeClick: (item: any) => returnCurrentLabel(item.id),
     nodeLabel: (item: any) => item.id as string,
   };
