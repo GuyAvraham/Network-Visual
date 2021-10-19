@@ -72,14 +72,19 @@ const Graph = ({
   };
 
   const returnCurrentNodeColor = (status: string) => {
-    if (status === "bad") {
-      return "red";
-    } else if (status === "good") {
-      return "green";
-    } else if (status === "suspicious") {
-      return "orange";
-    } else {
-      return "#1F95FF";
+    switch (status) {
+      case "bad": {
+        return "red";
+      }
+      case "good": {
+        return "green";
+      }
+      case "suspicious": {
+        return "orange";
+      }
+      default: {
+        return "#1F95FF";
+      }
     }
   };
 
