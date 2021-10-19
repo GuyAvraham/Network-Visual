@@ -79,7 +79,7 @@ const Graph = ({
     } else if (status === "suspicious") {
       return "orange";
     } else {
-      return "white";
+      return "#1F95FF";
     }
   };
 
