@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useRef, useCallback, useState } from "react";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import * as THREE from "three";
 
@@ -14,16 +14,18 @@ import {
 } from "../../models/routesData";
 
 interface GraphProps {
-  setCurrentUserData(data: string): void;
-  setIsPopupShow(data: boolean): void;
-  show2DGraph: boolean;
+  gData?: {
+    nodes: CorrectPointDataT[];
+    links: CorrectRouteDataT[];
+  };
+  returnCurrentLabel?(data: string): void;
+  setCurrentUserData: any;
+  setIsPopupShow: any;
 }
 
-const Graph = ({
-  setCurrentUserData,
-  setIsPopupShow,
-  show2DGraph,
-}: GraphProps) => {
+const Graph3D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
+  const fgRef = useRef();
+
   const correctUserArray = (users as unknown as { default: userDataT[] })
     .default;
   const currentRoutesArray = (routes as unknown as { default: RouteDataT[] })
@@ -55,12 +57,6 @@ const Graph = ({
     links,
   };
 
-  const returnCurrentColor = (source: PointT, target: PointT) =>
-    links.find(
-      (item: CorrectRouteDataT) =>
-        item.source === source && item.target === target
-    )!;
-
   const returnCurrentLabel = (id: string | number | undefined) => {
     setIsPopupShow(true);
     setCurrentUserData(
@@ -71,6 +67,12 @@ const Graph = ({
       )
     );
   };
+
+  const returnCurrentColor = (source: PointT, target: PointT) =>
+    gData.links.find(
+      (item: CorrectRouteDataT) =>
+        item.source === source && item.target === target
+    )!;
 
   const returnCurrentNodeColor = useMemo(
     () => (status: string) => {
@@ -95,6 +97,22 @@ const Graph = ({
     [users]
   );
 
+  const handleFocusOnNode = (node: any) => {
+    const distance = 40;
+    const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+
+    //@ts-ignore
+    fgRef?.current.cameraPosition(
+      {
+        x: node.x * distRatio,
+        y: node.y * distRatio,
+        z: node.z * distRatio,
+      }, // new position
+      node, // lookAt ({ x, y, z })
+      3000 // ms transition duration
+    );
+  };
+
   const commonData = {
     graphData: gData,
     linkColor: (item: DefaultRouteT) =>
@@ -109,15 +127,17 @@ const Graph = ({
       returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
     linkDirectionalParticleSpeed: 0,
     nodeColor: (item: any) => returnCurrentNodeColor(item.forterStatus),
-    onNodeClick: (item: any) => returnCurrentLabel(item.id),
+    onNodeClick: (item: any) => {
+      returnCurrentLabel(item.id);
+      handleFocusOnNode(item);
+    },
     nodeLabel: (item: any) => item.id as string,
   };
 
-  return show2DGraph ? (
-    <ForceGraph2D {...commonData} backgroundColor="#000000" />
-  ) : (
+  return (
     <ForceGraph3D
       {...commonData}
+      ref={fgRef}
       linkOpacity={1}
       // nodeThreeObject={({ id }: any) =>
       //   new THREE.Mesh(
@@ -149,4 +169,4 @@ const Graph = ({
   );
 };
 
-export default memo(Graph);
+export default memo(Graph3D);

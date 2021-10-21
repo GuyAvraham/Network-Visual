@@ -1,3 +1,5 @@
+import { CorrectRouteDataT } from "./routesData";
+
 export type userDataT = {
   username: string;
   merchant_status: string;
@@ -26,4 +28,9 @@ export type userDataT = {
   group: number;
 };
 
-export type CorrectPointDataT = { id: string, forterStatus: string };
+export type CorrectPointDataT = {
+  id: string;
+  forterStatus: string;
+  neighbors?: CorrectPointDataT[];
+  links?: CorrectRouteDataT[];
+};
