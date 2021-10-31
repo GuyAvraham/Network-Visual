@@ -1,58 +1,31 @@
 import React, { memo, useMemo, useRef, useCallback, useState } from "react";
 import { ForceGraph2D } from "react-force-graph";
-import * as THREE from "three";
+import { Mesh, BoxGeometry, MeshLambertMaterial, CircleGeometry } from "three";
 
-import * as users from "../../data/users_profile.json";
-import * as routes from "../../data/users_edges.json";
+import { getPracticeData } from "../../helpers/getGraphData";
+import { getCurrentUserData } from "../../helpers/getCurrentUserData";
+import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
 
-import { userDataT, CorrectPointDataT } from "../../models/userData";
-import {
-  RouteDataT,
-  CorrectRouteDataT,
-  DefaultRouteT,
-  PointT,
-} from "../../models/routesData";
+import { CorrectPointDataT } from "../../models/userData";
+import { CorrectRouteDataT } from "../../models/routesData";
 
 interface GraphProps {
   setCurrentUserData(data: string): void;
   setIsPopupShow(data: boolean): void;
+  lineWidth: any;
 }
 
 const NODE_R = 3;
 
-const Graph2D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
-  const correctUserArray = (users as unknown as { default: userDataT[] })
-    .default;
-  const currentRoutesArray = (routes as unknown as { default: RouteDataT[] })
-    .default;
+const Graph2D = ({
+  setCurrentUserData,
+  setIsPopupShow,
+  lineWidth,
+}: GraphProps) => {
   const fgRef = useRef();
 
-  const nodes: CorrectPointDataT[] = correctUserArray.map(
-    (item: userDataT) => ({
-      id: item.username,
-      forterStatus: item.forter_status,
-    })
-  );
-
-  const links: CorrectRouteDataT[] = currentRoutesArray
-    .map((item: RouteDataT) => ({
-      source: item.from,
-      target: item.to,
-      linkColor: "white",
-      width: item.width,
-      dashes: item.dashes ? true : false,
-    }))
-    .filter(
-      (item: CorrectRouteDataT) =>
-        nodes.some((i: CorrectPointDataT) => i.id === item.source) &&
-        nodes.some((i: CorrectPointDataT) => i.id === item.target)
-    );
-
   const data = useMemo(() => {
-    const gData = {
-      nodes,
-      links,
-    };
+    const gData = getPracticeData();
 
     gData.links.forEach((link: CorrectRouteDataT) => {
       const a = gData.nodes.find(
@@ -83,37 +56,8 @@ const Graph2D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
 
   const returnCurrentLabel = (id: string | number | undefined) => {
     setIsPopupShow(true);
-    setCurrentUserData(
-      JSON.stringify(
-        correctUserArray.find((item: userDataT) => item.username === id)!,
-        null,
-        2
-      )
-    );
+    setCurrentUserData(getCurrentUserData(id));
   };
-
-  const returnCurrentNodeColor = useMemo(
-    () => (status: string) => {
-      switch (status) {
-        case "bad": {
-          return "red";
-        }
-        case "good": {
-          return "green";
-        }
-        case "good": {
-          return "green";
-        }
-        case "suspicious": {
-          return "orange";
-        }
-        default: {
-          return "#1F95FF";
-        }
-      }
-    },
-    [users]
-  );
 
   //   const handleClick = (node: any) => {
   //     const distance = 40;
@@ -207,12 +151,50 @@ const Graph2D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
         highlightNodes.has(node) ? "before" : "after"
       }
       linkColor={() => "white"}
-      nodeCanvasObject={paintRing}
+    //   nodeCanvasObject={paintRing}
+    // nodeCanvasObject={new Mesh(
+    //     // new BoxGeometry(
+    //     //   Math.random() * 20,
+    //     //   Math.random() * 20,
+    //     //   Math.random() * 20
+    //     // ),
+    //     new CircleGeometry(
+    //       Math.random() * 20,
+    //       Math.random() * 20,
+    //       Math.random() * 20
+    //       // Math.random() * 20
+    //     ),
+    //     new MeshLambertMaterial({
+    //       color: Math.round(Math.random() * Math.pow(2, 24)),
+    //       transparent: true,
+    //       opacity: 0.75,
+    //     }))
+    // }
       onNodeHover={handleNodeHover}
       onLinkHover={handleLinkHover}
       onNodeClick={(item: any) => returnCurrentLabel(item.id)}
       //   {...commonData}
       backgroundColor="#000000"
+      
+    //   nodeThreeObject={({ id }) =>
+    //     new Mesh(
+    //       // new BoxGeometry(
+    //       //   Math.random() * 20,
+    //       //   Math.random() * 20,
+    //       //   Math.random() * 20
+    //       // ),
+    //       new CircleGeometry(
+    //         Math.random() * 20
+    //         // Math.random() * 20,
+    //         // Math.random() * 20
+    //       ),
+    //       new MeshLambertMaterial({
+    //         color: Math.round(Math.random() * Math.pow(2, 24)),
+    //         transparent: true,
+    //         opacity: 0.75,
+    //       })
+    //     )
+    //   }
     />
   );
 };

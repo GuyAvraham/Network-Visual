@@ -1,15 +1,4 @@
-import React, { useState, useEffect } from "react";
-
-import * as users from "../../data/users_profile.json";
-import * as routes from "../../data/users_edges.json";
-
-import { userDataT, CorrectPointDataT } from "../../models/userData";
-import {
-  RouteDataT,
-  CorrectRouteDataT,
-  DefaultRouteT,
-  PointT,
-} from "../../models/routesData";
+import React, { useState, useEffect, useMemo } from "react";
 
 import "./style.css";
 
@@ -19,18 +8,25 @@ const GraphContainer = () => {
   const [currentUserData, setCurrentUserData] = useState<string>("");
   const [isPopupShow, setIsPopupShow] = useState<boolean>(false);
   const [show2DGraph, setShow2DGraph] = useState<boolean>(false);
+  const [lineWidth, setLineWidth] = useState<number>(2);
 
   useEffect(() => setIsPopupShow(false), [show2DGraph]);
+
+  const handleChangeLinkWidth = (e: any) => {
+    setLineWidth(e.target.value);
+  };
 
   return (
     <>
       {show2DGraph ? (
         <Graph2D
+          lineWidth={lineWidth}
           setCurrentUserData={setCurrentUserData}
           setIsPopupShow={setIsPopupShow}
         />
       ) : (
         <Graph3D
+          lineWidth={lineWidth}
           setIsPopupShow={setIsPopupShow}
           setCurrentUserData={setCurrentUserData}
         />
@@ -40,12 +36,17 @@ const GraphContainer = () => {
         currentUserData={currentUserData}
         isPopupShow={isPopupShow}
       />
-      <button
+      <input
+        type="number"
+        className="changeGraphButton"
+        onChange={handleChangeLinkWidth}
+      />
+      {/* <button
         className="changeGraphButton"
         onClick={() => setShow2DGraph(!show2DGraph)}
       >
         {`Change graph ${show2DGraph ? "to 3D" : "to 2D"}`}
-      </button>
+      </button> */}
     </>
   );
 };

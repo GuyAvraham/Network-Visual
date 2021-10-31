@@ -1,71 +1,40 @@
-import React, { memo, useMemo, useRef, useCallback, useState } from "react";
-import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
-import * as THREE from "three";
-
-import * as users from "../../data/users_profile.json";
-import * as routes from "../../data/users_edges.json";
-
-import { userDataT, CorrectPointDataT } from "../../models/userData";
+import React, { memo, useRef, useState } from "react";
+import { ForceGraph3D } from "react-force-graph";
 import {
-  RouteDataT,
+  Mesh,
+  BoxGeometry,
+  MeshLambertMaterial,
+  SphereGeometry,
+  TetrahedronGeometry,
+} from "three";
+
+import { getPracticeData } from "../../helpers/getGraphData";
+import { getCurrentUserData } from "../../helpers/getCurrentUserData";
+import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
+
+import {
   CorrectRouteDataT,
   DefaultRouteT,
   PointT,
 } from "../../models/routesData";
 
 interface GraphProps {
-  gData?: {
-    nodes: CorrectPointDataT[];
-    links: CorrectRouteDataT[];
-  };
-  returnCurrentLabel?(data: string): void;
-  setCurrentUserData: any;
+  setCurrentUserData(data: string): void;
   setIsPopupShow: any;
+  lineWidth: number;
 }
 
-const Graph3D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
+const Graph3D = ({
+  setCurrentUserData,
+  setIsPopupShow,
+  lineWidth,
+}: GraphProps) => {
   const fgRef = useRef();
 
-  const correctUserArray = (users as unknown as { default: userDataT[] })
-    .default;
-  const currentRoutesArray = (routes as unknown as { default: RouteDataT[] })
-    .default;
-
-  const nodes: CorrectPointDataT[] = correctUserArray.map(
-    (item: userDataT) => ({
-      id: item.username,
-      forterStatus: item.forter_status,
-    })
-  );
-
-  const links: CorrectRouteDataT[] = currentRoutesArray
-    .map((item: RouteDataT) => ({
-      source: item.from,
-      target: item.to,
-      linkColor: "white",
-      width: item.width,
-      dashes: item.dashes ? true : false,
-    }))
-    .filter(
-      (item: CorrectRouteDataT) =>
-        nodes.some((i: CorrectPointDataT) => i.id === item.source) &&
-        nodes.some((i: CorrectPointDataT) => i.id === item.target)
-    );
-
-  const gData = {
-    nodes,
-    links,
-  };
-
+  const gData = getPracticeData();
   const returnCurrentLabel = (id: string | number | undefined) => {
     setIsPopupShow(true);
-    setCurrentUserData(
-      JSON.stringify(
-        correctUserArray.find((item: userDataT) => item.username === id)!,
-        null,
-        2
-      )
-    );
+    setCurrentUserData(getCurrentUserData(id));
   };
 
   const returnCurrentColor = (source: PointT, target: PointT) =>
@@ -73,29 +42,6 @@ const Graph3D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
       (item: CorrectRouteDataT) =>
         item.source === source && item.target === target
     )!;
-
-  const returnCurrentNodeColor = useMemo(
-    () => (status: string) => {
-      switch (status) {
-        case "bad": {
-          return "red";
-        }
-        case "good": {
-          return "green";
-        }
-        case "good": {
-          return "green";
-        }
-        case "suspicious": {
-          return "orange";
-        }
-        default: {
-          return "#1F95FF";
-        }
-      }
-    },
-    [users]
-  );
 
   const handleFocusOnNode = (node: any) => {
     const distance = 40;
@@ -120,7 +66,7 @@ const Graph3D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
     linkWidth: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes
         ? 0
-        : returnCurrentColor(item.source, item.target).width * 2,
+        : returnCurrentColor(item.source, item.target).width * lineWidth,
     linkDirectionalParticles: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes ? 10 : 0,
     linkDirectionalParticleWidth: (item: DefaultRouteT) =>
@@ -134,37 +80,37 @@ const Graph3D = ({ setCurrentUserData, setIsPopupShow }: GraphProps) => {
     nodeLabel: (item: any) => item.id as string,
   };
 
+  // const randomGeometric = () => {
+  //   return(
+
+  //   )
+  // }
+
   return (
     <ForceGraph3D
       {...commonData}
       ref={fgRef}
       linkOpacity={1}
-      // nodeThreeObject={({ id }: any) =>
-      //   new THREE.Mesh(
-      //     [
-      //       new THREE.BoxGeometry(
-      //         Math.random() * 20,
-      //         Math.random() * 20,
-      //         Math.random() * 20
-      //       ),
-      //       new THREE.ConeGeometry(Math.random() * 10, Math.random() * 20),
-      //       new THREE.CylinderGeometry(
-      //         Math.random() * 10,
-      //         Math.random() * 10,
-      //         Math.random() * 20
-      //       ),
-      //       new THREE.DodecahedronGeometry(Math.random() * 10),
-      //       new THREE.SphereGeometry(Math.random() * 10),
-      //       new THREE.TorusGeometry(Math.random() * 10, Math.random() * 2),
-      //       new THREE.TorusKnotGeometry(Math.random() * 10, Math.random() * 2),
-      //     ][id % 7],
-      //     new THREE.MeshLambertMaterial({
-      //       color: Math.round(Math.random() * Math.pow(2, 24)),
-      //       transparent: true,
-      //       opacity: 0.75,
-      //     })
-      //   )
-      // }
+      nodeThreeObject={({ id }) =>
+        new Mesh(
+          // new BoxGeometry(
+          //   Math.random() * 20,
+          //   Math.random() * 20,
+          //   Math.random() * 20
+          // ),
+          new BoxGeometry(
+            Math.random() * 20,
+            Math.random() * 20,
+            Math.random() * 20
+            // Math.random() * 20
+          ),
+          new MeshLambertMaterial({
+            color: Math.round(Math.random() * Math.pow(2, 24)),
+            transparent: true,
+            opacity: 0.75,
+          })
+        )
+      }
     />
   );
 };
