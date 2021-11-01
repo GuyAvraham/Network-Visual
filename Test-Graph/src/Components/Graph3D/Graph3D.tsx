@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useRef } from "react";
 import { ForceGraph3D } from "react-force-graph";
 import {
   Mesh,
@@ -11,6 +11,7 @@ import {
 import { getPracticeData } from "../../helpers/getGraphData";
 import { getCurrentUserData } from "../../helpers/getCurrentUserData";
 import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
+import { GraphProps } from "../../models/Graph";
 
 import {
   CorrectRouteDataT,
@@ -18,16 +19,11 @@ import {
   PointT,
 } from "../../models/routesData";
 
-interface GraphProps {
-  setCurrentUserData(data: string): void;
-  setIsPopupShow: any;
-  lineWidth: number;
-}
-
 const Graph3D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
+  nodeSize,
 }: GraphProps) => {
   const fgRef = useRef();
 
@@ -77,39 +73,66 @@ const Graph3D = ({
       returnCurrentLabel(item.id);
       handleFocusOnNode(item);
     },
+    nodeSize: { nodeSize },
     nodeLabel: (item: any) => item.id as string,
   };
 
-  // const randomGeometric = () => {
-  //   return(
-
-  //   )
-  // }
+  const returnCorrectGeometric = (isBuyer: boolean, isSeller: boolean) => {
+    if (isBuyer && isSeller) {
+      return new Mesh(
+        new BoxGeometry(
+          Math.random() * 20 * nodeSize,
+          Math.random() * 20 * nodeSize,
+          Math.random() * 20 * nodeSize
+        ),
+        new MeshLambertMaterial({
+          color: Math.round(Math.random() * Math.pow(2, 24)),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (isBuyer && !isSeller) {
+      return new Mesh(
+        new SphereGeometry(Math.random() * 20 * nodeSize),
+        new MeshLambertMaterial({
+          color: Math.round(Math.random() * Math.pow(2, 24)),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (!isBuyer && isSeller) {
+      return new Mesh(
+        new BoxGeometry(
+          Math.random() * 20 * nodeSize,
+          Math.random() * 20 * nodeSize,
+          Math.random() * 20 * nodeSize
+        ),
+        new MeshLambertMaterial({
+          color: Math.round(Math.random() * Math.pow(2, 24)),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (!isBuyer && !isSeller) {
+      return new Mesh(
+        new TetrahedronGeometry(Math.random() * 20 * nodeSize),
+        new MeshLambertMaterial({
+          color: Math.round(Math.random() * Math.pow(2, 24)),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    }
+  };
 
   return (
     <ForceGraph3D
       {...commonData}
       ref={fgRef}
       linkOpacity={1}
-      nodeThreeObject={({ id }) =>
-        new Mesh(
-          // new BoxGeometry(
-          //   Math.random() * 20,
-          //   Math.random() * 20,
-          //   Math.random() * 20
-          // ),
-          new BoxGeometry(
-            Math.random() * 20,
-            Math.random() * 20,
-            Math.random() * 20
-            // Math.random() * 20
-          ),
-          new MeshLambertMaterial({
-            color: Math.round(Math.random() * Math.pow(2, 24)),
-            transparent: true,
-            opacity: 0.75,
-          })
-        )
+      //@ts-ignore
+      nodeThreeObject={(item: any) =>
+        returnCorrectGeometric(item.isBuyer, item.isSeller)
       }
     />
   );

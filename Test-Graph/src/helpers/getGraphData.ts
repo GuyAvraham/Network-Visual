@@ -14,6 +14,8 @@ export const getPracticeData = () => {
     (item: userDataT) => ({
       id: item.username,
       forterStatus: item.forter_status,
+      isBuyer: !!item.is_buyer,
+      inSeller: !!item.is_seller
     })
   );
 

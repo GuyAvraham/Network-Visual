@@ -1,6 +1,5 @@
 import React, { memo, useMemo, useRef, useCallback, useState } from "react";
 import { ForceGraph2D } from "react-force-graph";
-import { Mesh, BoxGeometry, MeshLambertMaterial, CircleGeometry } from "three";
 
 import { getPracticeData } from "../../helpers/getGraphData";
 import { getCurrentUserData } from "../../helpers/getCurrentUserData";
@@ -8,12 +7,7 @@ import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
 
 import { CorrectPointDataT } from "../../models/userData";
 import { CorrectRouteDataT } from "../../models/routesData";
-
-interface GraphProps {
-  setCurrentUserData(data: string): void;
-  setIsPopupShow(data: boolean): void;
-  lineWidth: any;
-}
+import { GraphProps } from "../../models/Graph";
 
 const NODE_R = 3;
 
@@ -21,6 +15,7 @@ const Graph2D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
+  nodeSize,
 }: GraphProps) => {
   const fgRef = useRef();
 
@@ -142,59 +137,62 @@ const Graph2D = ({
       graphData={data}
       nodeRelSize={NODE_R}
       autoPauseRedraw={false}
-      linkWidth={(link) => (highlightLinks.has(link) ? 2 : 1)}
+      linkWidth={(link) =>
+        highlightLinks.has(link) ? 2 * lineWidth : 1 * lineWidth
+      }
       linkDirectionalParticles={4}
       linkDirectionalParticleWidth={(link) =>
         highlightLinks.has(link) ? 4 : 0
       }
-      nodeCanvasObjectMode={(node: any) =>
-        highlightNodes.has(node) ? "before" : "after"
-      }
+      nodeVal={nodeSize}
+      // nodeCanvasObjectMode={(node: any) =>
+      //   highlightNodes.has(node) ? "before" : "after"
+      // }
       linkColor={() => "white"}
-    //   nodeCanvasObject={paintRing}
-    // nodeCanvasObject={new Mesh(
-    //     // new BoxGeometry(
-    //     //   Math.random() * 20,
-    //     //   Math.random() * 20,
-    //     //   Math.random() * 20
-    //     // ),
-    //     new CircleGeometry(
-    //       Math.random() * 20,
-    //       Math.random() * 20,
-    //       Math.random() * 20
-    //       // Math.random() * 20
-    //     ),
-    //     new MeshLambertMaterial({
-    //       color: Math.round(Math.random() * Math.pow(2, 24)),
-    //       transparent: true,
-    //       opacity: 0.75,
-    //     }))
-    // }
+      nodeCanvasObject={paintRing}
+      // nodeCanvasObject={new Mesh(
+      //     // new BoxGeometry(
+      //     //   Math.random() * 20,
+      //     //   Math.random() * 20,
+      //     //   Math.random() * 20
+      //     // ),
+      //     new CircleGeometry(
+      //       Math.random() * 20,
+      //       Math.random() * 20,
+      //       Math.random() * 20
+      //       // Math.random() * 20
+      //     ),
+      //     new MeshLambertMaterial({
+      //       color: Math.round(Math.random() * Math.pow(2, 24)),
+      //       transparent: true,
+      //       opacity: 0.75,
+      //     }))
+      // }
       onNodeHover={handleNodeHover}
       onLinkHover={handleLinkHover}
       onNodeClick={(item: any) => returnCurrentLabel(item.id)}
       //   {...commonData}
       backgroundColor="#000000"
-      
-    //   nodeThreeObject={({ id }) =>
-    //     new Mesh(
-    //       // new BoxGeometry(
-    //       //   Math.random() * 20,
-    //       //   Math.random() * 20,
-    //       //   Math.random() * 20
-    //       // ),
-    //       new CircleGeometry(
-    //         Math.random() * 20
-    //         // Math.random() * 20,
-    //         // Math.random() * 20
-    //       ),
-    //       new MeshLambertMaterial({
-    //         color: Math.round(Math.random() * Math.pow(2, 24)),
-    //         transparent: true,
-    //         opacity: 0.75,
-    //       })
-    //     )
-    //   }
+
+      //   nodeThreeObject={({ id }) =>
+      //     new Mesh(
+      //       // new BoxGeometry(
+      //       //   Math.random() * 20,
+      //       //   Math.random() * 20,
+      //       //   Math.random() * 20
+      //       // ),
+      //       new CircleGeometry(
+      //         Math.random() * 20
+      //         // Math.random() * 20,
+      //         // Math.random() * 20
+      //       ),
+      //       new MeshLambertMaterial({
+      //         color: Math.round(Math.random() * Math.pow(2, 24)),
+      //         transparent: true,
+      //         opacity: 0.75,
+      //       })
+      //     )
+      //   }
     />
   );
 };
