@@ -33,6 +33,8 @@ export type CorrectPointDataT = {
   forterStatus: string;
   neighbors?: CorrectPointDataT[];
   links?: CorrectRouteDataT[];
-  isBuyer?: boolean;
-  isSeller?: boolean
+  isBuyer: boolean;
+  isSeller: boolean;
+  amount: number;
+  merchantStatus: string;
 };

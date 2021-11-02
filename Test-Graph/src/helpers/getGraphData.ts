@@ -15,7 +15,9 @@ export const getPracticeData = () => {
       id: item.username,
       forterStatus: item.forter_status,
       isBuyer: !!item.is_buyer,
-      inSeller: !!item.is_seller
+      isSeller: !!item.is_seller,
+      amount: item.amount ? item.amount : 100,
+      merchantStatus: item.merchant_status,
     })
   );
 

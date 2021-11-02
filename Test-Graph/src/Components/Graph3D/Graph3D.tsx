@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useCallback, useRef, useState, useEffect } from "react";
 import { ForceGraph3D } from "react-force-graph";
 import {
   Mesh,
@@ -23,9 +23,22 @@ const Graph3D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
-  nodeSize,
+  nodeSizeForBuyer,
+  nodeSizeForSeller,
+  nodeSizeForBuyerAndSeller,
+  nodeSizeForOther,
+  startFlickering,
 }: GraphProps) => {
   const fgRef = useRef();
+  const [isFlickering, setIsFlickering] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (startFlickering) {
+      setTimeout(() => setIsFlickering(!isFlickering), 100);
+    } else {
+      setIsFlickering(false);
+    }
+  }, [startFlickering, isFlickering]);
 
   const gData = getPracticeData();
   const returnCurrentLabel = (id: string | number | undefined) => {
@@ -59,10 +72,11 @@ const Graph3D = ({
     graphData: gData,
     linkColor: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).linkColor,
-    linkWidth: (item: DefaultRouteT) =>
-      returnCurrentColor(item.source, item.target).dashes
-        ? 0
-        : returnCurrentColor(item.source, item.target).width * lineWidth,
+    // linkWidth: (item: DefaultRouteT) =>
+    //   returnCurrentColor(item.source, item.target).dashes
+    //     ? 0
+    //     : returnCurrentColor(item.source, item.target).width * lineWidth,
+
     linkDirectionalParticles: (item: DefaultRouteT) =>
       returnCurrentColor(item.source, item.target).dashes ? 10 : 0,
     linkDirectionalParticleWidth: (item: DefaultRouteT) =>
@@ -73,66 +87,90 @@ const Graph3D = ({
       returnCurrentLabel(item.id);
       handleFocusOnNode(item);
     },
-    nodeSize: { nodeSize },
     nodeLabel: (item: any) => item.id as string,
   };
 
-  const returnCorrectGeometric = (isBuyer: boolean, isSeller: boolean) => {
-    if (isBuyer && isSeller) {
-      return new Mesh(
-        new BoxGeometry(
-          Math.random() * 20 * nodeSize,
-          Math.random() * 20 * nodeSize,
-          Math.random() * 20 * nodeSize
-        ),
-        new MeshLambertMaterial({
-          color: Math.round(Math.random() * Math.pow(2, 24)),
-          transparent: true,
-          opacity: 0.75,
-        })
-      );
-    } else if (isBuyer && !isSeller) {
-      return new Mesh(
-        new SphereGeometry(Math.random() * 20 * nodeSize),
-        new MeshLambertMaterial({
-          color: Math.round(Math.random() * Math.pow(2, 24)),
-          transparent: true,
-          opacity: 0.75,
-        })
-      );
-    } else if (!isBuyer && isSeller) {
-      return new Mesh(
-        new BoxGeometry(
-          Math.random() * 20 * nodeSize,
-          Math.random() * 20 * nodeSize,
-          Math.random() * 20 * nodeSize
-        ),
-        new MeshLambertMaterial({
-          color: Math.round(Math.random() * Math.pow(2, 24)),
-          transparent: true,
-          opacity: 0.75,
-        })
-      );
-    } else if (!isBuyer && !isSeller) {
-      return new Mesh(
-        new TetrahedronGeometry(Math.random() * 20 * nodeSize),
-        new MeshLambertMaterial({
-          color: Math.round(Math.random() * Math.pow(2, 24)),
-          transparent: true,
-          opacity: 0.75,
-        })
-      );
-    }
-  };
+  const returnCorrectGeometric = useCallback(
+    (
+      isBuyer: boolean,
+      isSeller: boolean,
+      amount: number,
+      forterStatus: string,
+      merchantStatus: string
+    ) => {
+      console.log(amount);
+
+      if (isBuyer && isSeller) {
+        return new Mesh(
+          new BoxGeometry(
+            (amount * nodeSizeForBuyerAndSeller) / 10,
+            (amount * nodeSizeForBuyerAndSeller) / 10,
+            (amount * nodeSizeForBuyerAndSeller) / 10
+          ),
+          new MeshLambertMaterial({
+            color: returnCurrentNodeColor(forterStatus),
+            transparent: true,
+            opacity: 0.75,
+          })
+        );
+      } else if (isBuyer && !isSeller) {
+        return new Mesh(
+          new SphereGeometry((amount * nodeSizeForBuyer) / 10),
+          new MeshLambertMaterial({
+            color: returnCurrentNodeColor(forterStatus),
+            transparent: true,
+            opacity: 0.75,
+          })
+        );
+      } else if (!isBuyer && isSeller) {
+        return new Mesh(
+          new BoxGeometry(
+            (amount * nodeSizeForSeller) / 10,
+            (amount * nodeSizeForSeller) / 10,
+            (amount * nodeSizeForSeller) / 10
+          ),
+          new MeshLambertMaterial({
+            color: returnCurrentNodeColor(forterStatus),
+            transparent: true,
+            opacity: 0.75,
+          })
+        );
+      } else if (!isBuyer && !isSeller) {
+        return new Mesh(
+          new TetrahedronGeometry((amount * nodeSizeForOther) / 10),
+          new MeshLambertMaterial({
+            color: returnCurrentNodeColor(forterStatus),
+            transparent: true,
+            opacity: 0.75,
+          })
+        );
+      }
+    },
+    [
+      startFlickering,
+      isFlickering,
+      nodeSizeForBuyerAndSeller,
+      nodeSizeForBuyer,
+      nodeSizeForSeller,
+      nodeSizeForOther,
+    ]
+  );
 
   return (
     <ForceGraph3D
       {...commonData}
       ref={fgRef}
       linkOpacity={1}
+      linkWidth={() => lineWidth}
       //@ts-ignore
       nodeThreeObject={(item: any) =>
-        returnCorrectGeometric(item.isBuyer, item.isSeller)
+        returnCorrectGeometric(
+          item.isBuyer,
+          item.isSeller,
+          item.amount,
+          item.forterStatus,
+          item.merchantStatus
+        )
       }
     />
   );

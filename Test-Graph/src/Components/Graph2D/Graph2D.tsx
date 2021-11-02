@@ -8,6 +8,7 @@ import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
 import { CorrectPointDataT } from "../../models/userData";
 import { CorrectRouteDataT } from "../../models/routesData";
 import { GraphProps } from "../../models/Graph";
+import { useEffect } from "react";
 
 const NODE_R = 3;
 
@@ -15,7 +16,11 @@ const Graph2D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
-  nodeSize,
+  nodeSizeForBuyer,
+  nodeSizeForSeller,
+  nodeSizeForBuyerAndSeller,
+  nodeSizeForOther,
+  startFlickering,
 }: GraphProps) => {
   const fgRef = useRef();
 
@@ -86,6 +91,15 @@ const Graph2D = ({
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
   const [hoverNode, setHoverNode] = useState(null);
+  const [isFlickering, setIsFlickering] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (startFlickering) {
+      setTimeout(() => setIsFlickering(!isFlickering), 100);
+    } else {
+      setIsFlickering(false);
+    }
+  }, [startFlickering, isFlickering]);
 
   const updateHighlight = () => {
     setHighlightNodes(highlightNodes);
@@ -120,14 +134,51 @@ const Graph2D = ({
     updateHighlight();
   };
 
+  const returnCurrentSize = (
+    isBuyer: boolean,
+    isSeller: boolean,
+    amount: number
+  ) => {
+    if (isBuyer && isSeller) {
+      return amount * nodeSizeForBuyerAndSeller;
+    } else if (isBuyer && !isSeller) {
+      return amount * nodeSizeForBuyer;
+    } else if (!isBuyer && isSeller) {
+      return amount * nodeSizeForSeller;
+    } else if (!isBuyer && !isSeller) {
+      return amount * nodeSizeForOther;
+    } else {
+      return 100;
+    }
+  };
+
   const paintRing = useCallback(
     (node, ctx) => {
       ctx.beginPath();
-      ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
-      ctx.fillStyle = returnCurrentNodeColor(node.forterStatus);
+      ctx.arc(
+        node.x,
+        node.y,
+        returnCurrentSize(node.isSeller, node.isBuyer, node.amount) / 25,
+        0,
+        2 * Math.PI,
+        false
+      );
+      ctx.fillStyle =
+        node.merchantStatus !== "active"
+          ? isFlickering
+            ? "black"
+            : returnCurrentNodeColor(node.forterStatus)
+          : returnCurrentNodeColor(node.forterStatus);
       ctx.fill();
     },
-    [hoverNode]
+    [
+      hoverNode,
+      nodeSizeForBuyerAndSeller,
+      nodeSizeForBuyer,
+      nodeSizeForSeller,
+      nodeSizeForOther,
+      isFlickering,
+    ]
   );
   ////////
 
@@ -144,7 +195,6 @@ const Graph2D = ({
       linkDirectionalParticleWidth={(link) =>
         highlightLinks.has(link) ? 4 : 0
       }
-      nodeVal={nodeSize}
       // nodeCanvasObjectMode={(node: any) =>
       //   highlightNodes.has(node) ? "before" : "after"
       // }

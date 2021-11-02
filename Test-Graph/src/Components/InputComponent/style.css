@@ -2,17 +2,15 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  align-items: center;
-  padding: 6px;
+  align-items: flex-start;
   margin-bottom: 12px;
   box-sizing: border-box;
 }
 
 .title {
-  font-family: Mulish;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 18px;
   letter-spacing: 0.3px;
   color: #363740;

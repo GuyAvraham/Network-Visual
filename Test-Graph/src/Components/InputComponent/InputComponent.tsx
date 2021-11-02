@@ -1,5 +1,6 @@
 import React from "react";
 import { InputProps } from "../../models/input";
+import "./style.css";
 
 export default function InputComponent({
   handleChange,
