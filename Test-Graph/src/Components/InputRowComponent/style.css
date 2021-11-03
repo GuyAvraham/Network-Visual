@@ -1,4 +1,4 @@
-.wrapper {
+.inputRowWrapper {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -7,6 +7,9 @@
   position: static;
   width: 100%;
   margin-bottom: 4px;
+  background-color: #a9a9b8;
+  border-radius: 8px;
+  padding: 14px;
 }
 .inputsWrapper {
   display: flex;

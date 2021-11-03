@@ -37,7 +37,7 @@ export default function InputRowComponent({
   };
 
   return (
-    <div className="wrapper">
+    <div className="inputRowWrapper">
       <div className="titleForInputRow">{title}</div>
       <div className="inputsWrapper">
         <InputComponent

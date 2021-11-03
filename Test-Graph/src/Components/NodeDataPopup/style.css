@@ -1,4 +1,4 @@
-.wrapper {
+.nodePopupWrapper {
   position: absolute;
   width: 300px;
   height: 450px;
@@ -16,7 +16,7 @@
   justify-content: space-between;
 }
 
-.title {
+.nodeDataTitle {
   width: 100%;
   display: flex;
   justify-content: flex-start;

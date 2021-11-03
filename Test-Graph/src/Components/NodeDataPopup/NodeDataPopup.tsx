@@ -18,8 +18,8 @@ export default function NodeDataPopup({
   };
 
   return isPopupShow ? (
-    <div className="wrapper">
-      <div className="title">Node data:</div>
+    <div className="nodePopupWrapper">
+      <div className="nodeDataTitle">Node data:</div>
       <pre className="content">{currentUserData}</pre>
       <div className="closeButton">
         <button onClick={handleClosePopup}>Close</button>
