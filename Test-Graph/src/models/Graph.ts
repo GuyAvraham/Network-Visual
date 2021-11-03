@@ -15,4 +15,5 @@ export type GraphProps = {
   colorForSeller: string;
   colorForBuyerAndSeller: string;
   colorForOther: string;
+  isFocusOnNodeNeeded?: boolean
 };

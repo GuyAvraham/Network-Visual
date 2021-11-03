@@ -31,6 +31,7 @@ const Graph3D = ({
   colorForSeller,
   colorForBuyerAndSeller,
   colorForOther,
+  isFocusOnNodeNeeded,
 }: GraphProps) => {
   const fgRef = useRef();
   const [isFlickering, setIsFlickering] = useState<boolean>(false);
@@ -88,7 +89,9 @@ const Graph3D = ({
     nodeColor: (item: any) => returnCurrentNodeColor(item.forterStatus),
     onNodeClick: (item: any) => {
       returnCurrentLabel(item.id);
-      handleFocusOnNode(item);
+      if (isFocusOnNodeNeeded) {
+        handleFocusOnNode(item);
+      }
     },
     nodeLabel: (item: any) => item.id as string,
   };

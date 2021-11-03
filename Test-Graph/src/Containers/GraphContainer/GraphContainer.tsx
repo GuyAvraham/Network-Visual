@@ -15,6 +15,8 @@ const GraphContainer = () => {
   const [isPopupShow, setIsPopupShow] = useState<boolean>(false);
   const [show2DGraph, setShow2DGraph] = useState<boolean>(false);
   const [lineWidth, setLineWidth] = useState<number>(2);
+  const [isFocusOnNodeNeeded, setIsFocusOnNodeNeeded] =
+    useState<boolean>(false);
 
   const [nodeSizeForBuyer, setNodeSizeForBuyer] = useState<number>(1);
   const [nodeSizeForSeller, setNodeSizeForSeller] = useState<number>(1);
@@ -114,7 +116,7 @@ const GraphContainer = () => {
       {show2DGraph ? (
         <Graph2D {...commonProps} />
       ) : (
-        <Graph3D {...commonProps} />
+        <Graph3D {...commonProps} isFocusOnNodeNeeded={isFocusOnNodeNeeded} />
       )}
       <NodeDataPopup
         setIsPopupShow={setIsPopupShow}
@@ -203,6 +205,15 @@ const GraphContainer = () => {
             type="number"
             title="Node size other"
           /> */}
+          <button
+            className="changeGraphButton"
+            onClick={() => setIsFocusOnNodeNeeded(!isFocusOnNodeNeeded)}
+            disabled={show2DGraph}
+          >
+            {!show2DGraph
+              ? `Tern focus on node ${isFocusOnNodeNeeded ? "Off" : "On"}`
+              : "Focus on node is not available yet for 2D gparh"}
+          </button>
           <button
             className="changeGraphButton"
             onClick={() => setStartFlickering(!startFlickering)}

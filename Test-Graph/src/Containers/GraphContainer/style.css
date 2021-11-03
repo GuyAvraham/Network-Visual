@@ -21,7 +21,7 @@
 }
 .toolsMenu:hover {
   width: 490px;
-  height: 800px;
+  height: fit-content;
   transition-duration: 300ms;
 }
 .toolsMenu:hover .toolsContent {
