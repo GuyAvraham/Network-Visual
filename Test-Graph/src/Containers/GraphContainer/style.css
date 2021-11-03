@@ -20,8 +20,8 @@
   transition-duration: 300ms;
 }
 .toolsMenu:hover {
-  width: 200px;
-  height: 400px;
+  width: 490px;
+  height: 800px;
   transition-duration: 300ms;
 }
 .toolsMenu:hover .toolsContent {

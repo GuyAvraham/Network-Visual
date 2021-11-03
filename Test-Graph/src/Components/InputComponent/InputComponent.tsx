@@ -7,6 +7,7 @@ export default function InputComponent({
   value,
   title,
   type,
+  width,
 }: InputProps) {
   return (
     <div className="inputWrapper">
@@ -16,6 +17,7 @@ export default function InputComponent({
         className="input"
         value={value ? value : ""}
         onChange={handleChange}
+        style={{ width: width || "auto" }}
       />
     </div>
   );

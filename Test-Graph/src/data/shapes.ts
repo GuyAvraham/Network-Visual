@@ -1,0 +1,1 @@
+export const SHAPES_DATA = ["Sphere","Box","Tetrahedron"]

@@ -1,0 +1,50 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: fit-content;
+  position: static;
+  width: 100%;
+  margin-bottom: 4px;
+}
+.inputsWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+.titleForInputRow {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+  color: #363740;
+  margin-right: 12px;
+  width: 40px;
+  min-width: 40px;
+  white-space: pre-wrap;
+}
+.titleForShape {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+  color: #363740;
+}
+.shapeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.select {
+  margin-right: 12px;
+  margin-left: 12px;
+}
+.addButton {
+  margin-left: 12px;
+}

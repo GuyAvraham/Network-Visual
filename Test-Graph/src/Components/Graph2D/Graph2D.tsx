@@ -3,7 +3,10 @@ import { ForceGraph2D } from "react-force-graph";
 
 import { getPracticeData } from "../../helpers/getGraphData";
 import { getCurrentUserData } from "../../helpers/getCurrentUserData";
-import { returnCurrentNodeColor } from "../../helpers/getCurrentNodeColor";
+import {
+  returnCurrentNodeColor,
+  returnCurrentNodeColorFor2D,
+} from "../../helpers/getCurrentNodeColor";
 
 import { CorrectPointDataT } from "../../models/userData";
 import { CorrectRouteDataT } from "../../models/routesData";
@@ -21,6 +24,10 @@ const Graph2D = ({
   nodeSizeForBuyerAndSeller,
   nodeSizeForOther,
   startFlickering,
+  colorForBuyer,
+  colorForSeller,
+  colorForBuyerAndSeller,
+  colorForOther,
 }: GraphProps) => {
   const fgRef = useRef();
 
@@ -167,8 +174,22 @@ const Graph2D = ({
         node.merchantStatus !== "active"
           ? isFlickering
             ? "black"
-            : returnCurrentNodeColor(node.forterStatus)
-          : returnCurrentNodeColor(node.forterStatus);
+            : returnCurrentNodeColorFor2D(
+                node.isSeller,
+                node.isBuyer,
+                colorForBuyer,
+                colorForSeller,
+                colorForBuyerAndSeller,
+                colorForOther
+              ) || returnCurrentNodeColor(node.forterStatus)
+          : returnCurrentNodeColorFor2D(
+              node.isSeller,
+              node.isBuyer,
+              colorForBuyer,
+              colorForSeller,
+              colorForBuyerAndSeller,
+              colorForOther
+            ) || returnCurrentNodeColor(node.forterStatus);
       ctx.fill();
     },
     [
@@ -178,6 +199,10 @@ const Graph2D = ({
       nodeSizeForSeller,
       nodeSizeForOther,
       isFlickering,
+      colorForBuyer,
+      colorForSeller,
+      colorForBuyerAndSeller,
+      colorForOther,
     ]
   );
   ////////

@@ -7,6 +7,7 @@ import {
   Graph3D,
   Graph2D,
   InputComponent,
+  InputRowComponent,
 } from "../../Components/index";
 
 const GraphContainer = () => {
@@ -14,11 +15,46 @@ const GraphContainer = () => {
   const [isPopupShow, setIsPopupShow] = useState<boolean>(false);
   const [show2DGraph, setShow2DGraph] = useState<boolean>(false);
   const [lineWidth, setLineWidth] = useState<number>(2);
+
   const [nodeSizeForBuyer, setNodeSizeForBuyer] = useState<number>(1);
   const [nodeSizeForSeller, setNodeSizeForSeller] = useState<number>(1);
   const [nodeSizeForBuyerAndSeller, setNodeSizeBuyerAndSeller] =
     useState<number>(1);
   const [nodeSizeForOther, setNodeSizeForOther] = useState<number>(1);
+
+  const [colorForBuyer, setColorForBuyer] = useState<string>("");
+  console.log(colorForBuyer);
+
+  const [colorForSeller, setColorForSeller] = useState<string>("");
+  console.log(colorForSeller);
+
+  const [colorForBuyerAndSeller, setColorForBuyerAndSeller] =
+    useState<string>("");
+  console.log(colorForBuyerAndSeller);
+
+  const [colorForOther, setColorForOther] = useState<string>("");
+  console.log(colorForOther);
+
+  const [shapeForBuyer, setShapeForBuyer] = useState("Sphere");
+
+  const [shapeForSeller, setShapeForSeller] = useState("Box");
+
+  const [shapeForBuyerAndSeller, setShapeForBuyerAndSeller] = useState("Box");
+
+  const [shapeForOther, setShapeForOther] = useState("Tetrahedron");
+
+  const handleOpenSelectForBuyer = (data: any) => {
+    setShapeForBuyer(data);
+  };
+  const handleOpenSelectForSeller = (data: any) => {
+    setShapeForSeller(data);
+  };
+  const handleOpenSelectForBuyerAndSeller = (data: any) => {
+    setShapeForBuyerAndSeller(data);
+  };
+  const handleOpenSelectForOther = (data: any) => {
+    setShapeForOther(data);
+  };
 
   const [startFlickering, setStartFlickering] = useState<boolean>(false);
 
@@ -28,25 +64,30 @@ const GraphContainer = () => {
     setLineWidth(e.target.value as number);
   };
 
-  const handleChangeNodeSizeForBuyer = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setNodeSizeForBuyer(e.target.value as number);
+  const handleChangeNodeSizeForBuyer = (data: number) => {
+    setNodeSizeForBuyer(data);
   };
-  const handleChangeNodeSizeForSeller = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setNodeSizeForSeller(e.target.value as number);
+  const handleChangeNodeSizeForSeller = (data: number) => {
+    setNodeSizeForSeller(data);
   };
-  const handleChangeNodeSizeForBuyerAndSeller = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setNodeSizeBuyerAndSeller(e.target.value as number);
+  const handleChangeNodeSizeForBuyerAndSeller = (data: number) => {
+    setNodeSizeBuyerAndSeller(data);
   };
-  const handleChangeNodeSizeForOther = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setNodeSizeForOther(e.target.value as number);
+  const handleChangeNodeSizeForOther = (data: number) => {
+    setNodeSizeForOther(data);
+  };
+
+  const handleChangeNodeColorForBuyer = (data: string) => {
+    setColorForBuyer(data);
+  };
+  const handleChangeNodeColorForSeller = (data: string) => {
+    setColorForSeller(data);
+  };
+  const handleChangeNodeColorForBuyerAndSeller = (data: string) => {
+    setColorForBuyerAndSeller(data);
+  };
+  const handleChangeNodeColorForOther = (data: string) => {
+    setColorForOther(data);
   };
 
   const commonProps = {
@@ -58,6 +99,14 @@ const GraphContainer = () => {
     setCurrentUserData,
     setIsPopupShow,
     startFlickering,
+    shapeForBuyer,
+    shapeForSeller,
+    shapeForBuyerAndSeller,
+    shapeForOther,
+    colorForBuyer,
+    colorForSeller,
+    colorForBuyerAndSeller,
+    colorForOther,
   };
 
   return (
@@ -81,13 +130,56 @@ const GraphContainer = () => {
           >
             {`Change graph ${show2DGraph ? "to 3D" : "to 2D"}`}
           </button>
+
           <InputComponent
             handleChange={handleChangeLinkWidth}
             value={lineWidth}
             type="number"
             title="Line width input"
           />
-          <InputComponent
+          <div>
+            <InputRowComponent
+              sizeValue={nodeSizeForBuyer}
+              colorValue={colorForBuyer}
+              shapeValue={shapeForBuyer}
+              title="Buyer"
+              handleChangeColor={handleChangeNodeColorForBuyer}
+              handleChangeShape={handleOpenSelectForBuyer}
+              handleChangeSize={handleChangeNodeSizeForBuyer}
+              isShapeDisabled={show2DGraph}
+            />
+            <InputRowComponent
+              sizeValue={nodeSizeForSeller}
+              colorValue={colorForSeller}
+              shapeValue={shapeForSeller}
+              title="Seller"
+              handleChangeColor={handleChangeNodeColorForSeller}
+              handleChangeShape={handleOpenSelectForSeller}
+              handleChangeSize={handleChangeNodeSizeForSeller}
+              isShapeDisabled={show2DGraph}
+            />
+            <InputRowComponent
+              sizeValue={nodeSizeForBuyerAndSeller}
+              colorValue={colorForBuyerAndSeller}
+              shapeValue={shapeForBuyerAndSeller}
+              title="Buyer and seller"
+              handleChangeColor={handleChangeNodeColorForBuyerAndSeller}
+              handleChangeShape={handleOpenSelectForBuyerAndSeller}
+              handleChangeSize={handleChangeNodeSizeForBuyerAndSeller}
+              isShapeDisabled={show2DGraph}
+            />
+            <InputRowComponent
+              sizeValue={nodeSizeForOther}
+              colorValue={colorForOther}
+              shapeValue={shapeForOther}
+              title="Other"
+              handleChangeColor={handleChangeNodeColorForOther}
+              handleChangeShape={handleOpenSelectForOther}
+              handleChangeSize={handleChangeNodeSizeForOther}
+              isShapeDisabled={show2DGraph}
+            />
+          </div>
+          {/* <InputComponent
             handleChange={handleChangeNodeSizeForBuyer}
             value={nodeSizeForBuyer}
             type="number"
@@ -110,14 +202,14 @@ const GraphContainer = () => {
             value={nodeSizeForOther}
             type="number"
             title="Node size other"
-          />
+          /> */}
           <button
             className="changeGraphButton"
             onClick={() => setStartFlickering(!startFlickering)}
             disabled={!show2DGraph}
           >
             {!show2DGraph
-              ? "Not available for 3D graph yet"
+              ? "Flickering is not available for 3D graph yet"
               : `${
                   startFlickering ? "Stop" : "Start"
                 } flickering none active merchant`}

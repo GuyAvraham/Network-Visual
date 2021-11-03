@@ -7,4 +7,12 @@ export type GraphProps = {
   nodeSizeForBuyerAndSeller: number;
   nodeSizeForOther: number;
   startFlickering?: boolean;
+  shapeForBuyer: string;
+  shapeForSeller: string;
+  shapeForBuyerAndSeller: string;
+  shapeForOther: string;
+  colorForBuyer: string;
+  colorForSeller: string;
+  colorForBuyerAndSeller: string;
+  colorForOther: string;
 };
