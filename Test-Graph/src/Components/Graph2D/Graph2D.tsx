@@ -19,6 +19,7 @@ const Graph2D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
+  lineColor,
   nodeSizeForBuyer,
   nodeSizeForSeller,
   nodeSizeForBuyerAndSeller,
@@ -212,6 +213,11 @@ const Graph2D = ({
       ref={fgRef}
       graphData={data}
       nodeRelSize={NODE_R}
+      linkLabel={(link) =>
+        `Line width: ${
+          highlightLinks.has(link) ? 2 * lineWidth : 1 * lineWidth
+        }`
+      }
       autoPauseRedraw={false}
       linkWidth={(link) =>
         highlightLinks.has(link) ? 2 * lineWidth : 1 * lineWidth
@@ -223,7 +229,7 @@ const Graph2D = ({
       // nodeCanvasObjectMode={(node: any) =>
       //   highlightNodes.has(node) ? "before" : "after"
       // }
-      linkColor={() => "white"}
+      linkColor={() => lineColor}
       nodeCanvasObject={paintRing}
       // nodeCanvasObject={new Mesh(
       //     // new BoxGeometry(

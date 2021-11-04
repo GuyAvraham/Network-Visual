@@ -1,7 +1,8 @@
 export type GraphProps = {
   setCurrentUserData(data: string): void;
   setIsPopupShow(data: boolean): void;
-  lineWidth: any;
+  lineWidth: number;
+  lineColor: string;
   nodeSizeForBuyer: number;
   nodeSizeForSeller: number;
   nodeSizeForBuyerAndSeller: number;
@@ -15,5 +16,5 @@ export type GraphProps = {
   colorForSeller: string;
   colorForBuyerAndSeller: string;
   colorForOther: string;
-  isFocusOnNodeNeeded?: boolean
+  isFocusOnNodeNeeded?: boolean;
 };

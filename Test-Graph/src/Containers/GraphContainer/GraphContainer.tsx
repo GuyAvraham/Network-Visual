@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { COLORS } from "../../data/colors";
+
 import "./style.css";
 
 import {
@@ -8,6 +10,7 @@ import {
   Graph2D,
   InputComponent,
   InputRowComponent,
+  SelectComponent,
 } from "../../Components/index";
 
 const GraphContainer = () => {
@@ -15,6 +18,8 @@ const GraphContainer = () => {
   const [isPopupShow, setIsPopupShow] = useState<boolean>(false);
   const [show2DGraph, setShow2DGraph] = useState<boolean>(false);
   const [lineWidth, setLineWidth] = useState<number>(2);
+  const [lineColor, setLineColor] = useState<string>("white");
+
   const [isFocusOnNodeNeeded, setIsFocusOnNodeNeeded] =
     useState<boolean>(false);
 
@@ -62,6 +67,10 @@ const GraphContainer = () => {
     setLineWidth(e.target.value as number);
   };
 
+  const handleChangeLinkColor = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setLineColor(e.target.value as string);
+  };
+
   const handleChangeNodeSizeForBuyer = (data: number) => {
     setNodeSizeForBuyer(data);
   };
@@ -90,6 +99,7 @@ const GraphContainer = () => {
 
   const commonProps = {
     lineWidth,
+    lineColor,
     nodeSizeForBuyer,
     nodeSizeForSeller,
     nodeSizeForBuyerAndSeller,
@@ -135,6 +145,18 @@ const GraphContainer = () => {
             type="number"
             title="Line width input"
           />
+          <SelectComponent
+            value={lineColor}
+            handleChange={handleChangeLinkColor}
+            DATA_CHOOSE={COLORS}
+            title="Links color"
+          />
+          {/* <InputComponent
+            handleChange={handleChangeLinkWidth}
+            value={lineColor}
+            type="string"
+            title="Line color input"
+          /> */}
           <div>
             <InputRowComponent
               sizeValue={nodeSizeForBuyer}

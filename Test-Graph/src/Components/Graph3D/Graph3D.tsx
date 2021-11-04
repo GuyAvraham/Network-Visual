@@ -18,6 +18,7 @@ const Graph3D = ({
   setCurrentUserData,
   setIsPopupShow,
   lineWidth,
+  lineColor,
   nodeSizeForBuyer,
   nodeSizeForSeller,
   nodeSizeForBuyerAndSeller,
@@ -55,7 +56,7 @@ const Graph3D = ({
       (item: CorrectRouteDataT) =>
         item.source === source && item.target === target
     )!;
-  console.log(shapeForBuyer);
+  console.log(gData.links);
 
   const handleFocusOnNode = (node: any) => {
     const distance = 40;
@@ -75,8 +76,8 @@ const Graph3D = ({
 
   const commonData = {
     graphData: gData,
-    linkColor: (item: DefaultRouteT) =>
-      returnCurrentColor(item.source, item.target).linkColor,
+    linkColor: (item: DefaultRouteT) => lineColor,
+    // returnCurrentColor(item.source, item.target).linkColor,
     // linkWidth: (item: DefaultRouteT) =>
     //   returnCurrentColor(item.source, item.target).dashes
     //     ? 0
@@ -180,6 +181,7 @@ const Graph3D = ({
       {...commonData}
       ref={fgRef}
       linkOpacity={1}
+      linkLabel={() => `Line width: ${lineWidth}`}
       linkWidth={() => lineWidth}
       //@ts-ignore
       nodeThreeObject={(item: any) =>

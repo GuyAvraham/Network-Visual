@@ -18,6 +18,7 @@
   width: 50px;
   height: 50px;
   transition-duration: 300ms;
+  border-radius: 6px;
 }
 .toolsMenu:hover {
   width: 490px;

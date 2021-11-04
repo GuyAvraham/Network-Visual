@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 // import Select from "react-select";
 
 import { SHAPES_DATA } from "../../data/shapes";
+import { COLORS } from "../../data/colors";
 
 import { InputRowComponentProps } from "../../models/input";
-import { InputComponent } from "../index";
+import { InputComponent, SelectComponent } from "../index";
 
 import "./style.css";
 
@@ -26,14 +27,22 @@ export default function InputRowComponent({
   //             : { value: item, label: item }
   //         )
   //       : [];
-  const [size, setSize] = useState(sizeValue);
-  const [shape, setShape] = useState(shapeValue);
-  const [color, setColor] = useState(colorValue);
+  //   const [size, setSize] = useState(sizeValue);
+  //   const [shape, setShape] = useState(shapeValue);
+  //   const [color, setColor] = useState(colorValue);
 
-  const handleAddChanges = () => {
-    handleChangeSize(size);
-    handleChangeShape(shape);
-    handleChangeColor(color);
+  //   const handleAddChanges = () => {
+  //     handleChangeSize(size);
+  //     handleChangeShape(shape);
+  //     handleChangeColor(color);
+  //   };
+
+  const handleChangeLinkColor = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChangeColor(e.target.value as string);
+  };
+
+  const handleOpenShapeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChangeShape(e.target.value as string);
   };
 
   return (
@@ -41,18 +50,18 @@ export default function InputRowComponent({
       <div className="titleForInputRow">{title}</div>
       <div className="inputsWrapper">
         <InputComponent
-          value={size}
-          handleChange={(e) => setSize(e.target.value as number)}
+          value={sizeValue}
+          handleChange={(e) => handleChangeSize(e.target.value as number)}
           type="number"
           title="Size"
           width="40px"
         />
-        <div className="shapeWrapper">
+        {/* <div className="shapeWrapper">
           <div className="titleForShape">Shape</div>
           <select
             name=""
             id=""
-            onChange={(e) => setShape(e.target.value as string)}
+            onChange={(e) => handleChangeShape(e.target.value as string)}
             defaultValue={shapeValue}
             disabled={isShapeDisabled}
           >
@@ -62,7 +71,13 @@ export default function InputRowComponent({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
+        <SelectComponent
+          value={shapeValue}
+          handleChange={handleOpenShapeSelect}
+          DATA_CHOOSE={SHAPES_DATA}
+          title="Shape"
+        />
         {/* <Select
         value={shapeValue?.value ? shapeValue : null}
         onChange={handleChangeShape}
@@ -71,15 +86,21 @@ export default function InputRowComponent({
         placeholder="Choose shape"
         // menuIsOpen={true}
       /> */}
-        <InputComponent
+        {/* <InputComponent
           value={color}
           handleChange={(e) => setColor(e.target.value as string)}
           title="Color"
+        /> */}
+        <SelectComponent
+          value={colorValue}
+          handleChange={handleChangeLinkColor}
+          DATA_CHOOSE={COLORS}
+          title="Color"
         />
       </div>
-      <button className="addButton" onClick={handleAddChanges}>
+      {/* <button className="addButton" onClick={handleAddChanges}>
         Change
-      </button>
+      </button> */}
     </div>
   );
 }

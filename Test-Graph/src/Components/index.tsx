@@ -3,4 +3,5 @@ export { default as Graph2D } from "./Graph2D/Graph2D";
 export { default as NodeDataPopup } from "./NodeDataPopup/NodeDataPopup";
 export { default as InputComponent } from "./InputComponent/InputComponent";
 export { default as InputRowComponent } from "./InputRowComponent/InputRowComponent";
+export { default as SelectComponent } from "./SelectComponent/SelectComponent";
 
