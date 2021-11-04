@@ -55,6 +55,7 @@ const Graph3D = ({
       (item: CorrectRouteDataT) =>
         item.source === source && item.target === target
     )!;
+  console.log(shapeForBuyer);
 
   const handleFocusOnNode = (node: any) => {
     const distance = 40;
@@ -95,6 +96,8 @@ const Graph3D = ({
     },
     nodeLabel: (item: any) => item.id as string,
   };
+
+  console.log(colorForBuyer);
 
   const returnCorrectGeometric = useCallback(
     (

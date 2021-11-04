@@ -25,17 +25,13 @@ const GraphContainer = () => {
   const [nodeSizeForOther, setNodeSizeForOther] = useState<number>(1);
 
   const [colorForBuyer, setColorForBuyer] = useState<string>("");
-  console.log(colorForBuyer);
 
   const [colorForSeller, setColorForSeller] = useState<string>("");
-  console.log(colorForSeller);
 
   const [colorForBuyerAndSeller, setColorForBuyerAndSeller] =
     useState<string>("");
-  console.log(colorForBuyerAndSeller);
 
   const [colorForOther, setColorForOther] = useState<string>("");
-  console.log(colorForOther);
 
   const [shapeForBuyer, setShapeForBuyer] = useState("Sphere");
 

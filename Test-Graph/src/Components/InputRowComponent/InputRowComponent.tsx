@@ -26,9 +26,9 @@ export default function InputRowComponent({
   //             : { value: item, label: item }
   //         )
   //       : [];
-  const [size, setSize] = useState(1);
-  const [shape, setShape] = useState("");
-  const [color, setColor] = useState("");
+  const [size, setSize] = useState(sizeValue);
+  const [shape, setShape] = useState(shapeValue);
+  const [color, setColor] = useState(colorValue);
 
   const handleAddChanges = () => {
     handleChangeSize(size);
