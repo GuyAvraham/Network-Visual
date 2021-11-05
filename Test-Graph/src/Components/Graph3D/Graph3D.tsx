@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useRef, useState, useEffect } from "react";
+import React, {
+  memo,
+  useCallback,
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { ForceGraph3D } from "react-force-graph";
 import { Mesh, MeshLambertMaterial } from "three";
 
@@ -34,7 +41,7 @@ const Graph3D = ({
   colorForOther,
   isFocusOnNodeNeeded,
 }: GraphProps) => {
-  const fgRef = useRef();
+  const fgRef = useRef<any>();
   const [isFlickering, setIsFlickering] = useState<boolean>(false);
 
   useEffect(() => {
@@ -44,8 +51,12 @@ const Graph3D = ({
       setIsFlickering(false);
     }
   }, [startFlickering, isFlickering]);
+  const a = true;
+  useEffect(() => {
+    fgRef.current = getPracticeData();
+  }, []);
 
-  const gData = getPracticeData();
+  const gData = useMemo(() => getPracticeData(), [a]);
   const returnCurrentLabel = (id: string | number | undefined) => {
     setIsPopupShow(true);
     setCurrentUserData(getCurrentUserData(id));
@@ -74,110 +85,94 @@ const Graph3D = ({
     );
   };
 
-  const commonData = {
-    graphData: gData,
-    linkColor: (item: DefaultRouteT) => lineColor,
-    // returnCurrentColor(item.source, item.target).linkColor,
-    // linkWidth: (item: DefaultRouteT) =>
-    //   returnCurrentColor(item.source, item.target).dashes
-    //     ? 0
-    //     : returnCurrentColor(item.source, item.target).width * lineWidth,
+  const commonData = useMemo(
+    () => ({
+      linkColor: () => lineColor,
+      // returnCurrentColor(item.source, item.target).linkColor,
+      // linkWidth: (item: DefaultRouteT) =>
+      //   returnCurrentColor(item.source, item.target).dashes
+      //     ? 0
+      //     : returnCurrentColor(item.source, item.target).width * lineWidth,
 
-    linkDirectionalParticles: (item: DefaultRouteT) =>
-      returnCurrentColor(item.source, item.target).dashes ? 10 : 0,
-    linkDirectionalParticleWidth: (item: DefaultRouteT) =>
-      returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
-    linkDirectionalParticleSpeed: 0,
-    nodeColor: (item: any) => returnCurrentNodeColor(item.forterStatus),
-    onNodeClick: (item: any) => {
-      returnCurrentLabel(item.id);
-      if (isFocusOnNodeNeeded) {
-        handleFocusOnNode(item);
-      }
-    },
-    nodeLabel: (item: any) => item.id as string,
-  };
+      linkDirectionalParticles: (item: DefaultRouteT) =>
+        returnCurrentColor(item.source, item.target).dashes ? 10 : 0,
+      linkDirectionalParticleWidth: (item: DefaultRouteT) =>
+        returnCurrentColor(item.source, item.target).dashes ? 3 : 0,
+      linkDirectionalParticleSpeed: 0,
+      nodeColor: (item: any) => returnCurrentNodeColor(item.forterStatus),
+      onNodeClick: (item: any) => {
+        returnCurrentLabel(item.id);
+        if (isFocusOnNodeNeeded) {
+          handleFocusOnNode(item);
+        }
+      },
+      nodeLabel: (item: any) => item.id as string,
+    }),
+    [gData, lineColor]
+  );
 
   console.log(colorForBuyer);
 
-  const returnCorrectGeometric = useCallback(
-    (
-      isBuyer: boolean,
-      isSeller: boolean,
-      amount: number,
-      forterStatus: string,
-      merchantStatus: string
-    ) => {
-      if (isBuyer && isSeller) {
-        return new Mesh(
-          returnCorrectGeometrics(
-            shapeForBuyerAndSeller,
-            amount,
-            nodeSizeForBuyerAndSeller
-          ),
-          new MeshLambertMaterial({
-            color: colorForBuyerAndSeller
-              ? colorForBuyerAndSeller
-              : returnCurrentNodeColor(forterStatus),
-            transparent: true,
-            opacity: 0.75,
-          })
-        );
-      } else if (isBuyer && !isSeller) {
-        return new Mesh(
-          returnCorrectGeometrics(shapeForBuyer, amount, nodeSizeForBuyer),
-          new MeshLambertMaterial({
-            color: colorForBuyer
-              ? colorForBuyer
-              : returnCurrentNodeColor(forterStatus),
-            transparent: true,
-            opacity: 0.75,
-          })
-        );
-      } else if (!isBuyer && isSeller) {
-        return new Mesh(
-          returnCorrectGeometrics(shapeForSeller, amount, nodeSizeForSeller),
-          new MeshLambertMaterial({
-            color: colorForSeller
-              ? colorForSeller
-              : returnCurrentNodeColor(forterStatus),
-            transparent: true,
-            opacity: 0.75,
-          })
-        );
-      } else if (!isBuyer && !isSeller) {
-        return new Mesh(
-          returnCorrectGeometrics(shapeForOther, amount, nodeSizeForOther),
-          new MeshLambertMaterial({
-            color: colorForOther
-              ? colorForOther
-              : returnCurrentNodeColor(forterStatus),
-            transparent: true,
-            opacity: 0.75,
-          })
-        );
-      }
-    },
-    [
-      startFlickering,
-      isFlickering,
-      nodeSizeForBuyerAndSeller,
-      nodeSizeForBuyer,
-      nodeSizeForSeller,
-      nodeSizeForOther,
-      shapeForBuyer,
-      shapeForSeller,
-      shapeForBuyerAndSeller,
-      shapeForOther,
-      colorForBuyer,
-      colorForSeller,
-      colorForBuyerAndSeller,
-      colorForOther,
-    ]
-  );
+  const returnCorrectGeometric = (
+    isBuyer: boolean,
+    isSeller: boolean,
+    amount: number,
+    forterStatus: string
+  ) => {
+    if (isBuyer && isSeller) {
+      return new Mesh(
+        returnCorrectGeometrics(
+          shapeForBuyerAndSeller,
+          amount,
+          nodeSizeForBuyerAndSeller
+        ),
+        new MeshLambertMaterial({
+          color: colorForBuyerAndSeller
+            ? colorForBuyerAndSeller
+            : returnCurrentNodeColor(forterStatus),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (isBuyer && !isSeller) {
+      return new Mesh(
+        returnCorrectGeometrics(shapeForBuyer, amount, nodeSizeForBuyer),
+        new MeshLambertMaterial({
+          color: colorForBuyer
+            ? colorForBuyer
+            : returnCurrentNodeColor(forterStatus),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (!isBuyer && isSeller) {
+      return new Mesh(
+        returnCorrectGeometrics(shapeForSeller, amount, nodeSizeForSeller),
+        new MeshLambertMaterial({
+          color: colorForSeller
+            ? colorForSeller
+            : returnCurrentNodeColor(forterStatus),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    } else if (!isBuyer && !isSeller) {
+      return new Mesh(
+        returnCorrectGeometrics(shapeForOther, amount, nodeSizeForOther),
+        new MeshLambertMaterial({
+          color: colorForOther
+            ? colorForOther
+            : returnCurrentNodeColor(forterStatus),
+          transparent: true,
+          opacity: 0.75,
+        })
+      );
+    }
+  };
 
   return (
     <ForceGraph3D
+      graphData={gData}
       {...commonData}
       ref={fgRef}
       linkOpacity={1}
@@ -189,8 +184,7 @@ const Graph3D = ({
           item.isBuyer,
           item.isSeller,
           item.amount,
-          item.forterStatus,
-          item.merchantStatus
+          item.forterStatus
         )
       }
     />
