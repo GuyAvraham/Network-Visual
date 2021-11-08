@@ -18,6 +18,7 @@ export const getPracticeData = () => {
       isSeller: !!item.is_seller,
       amount: item.amount ? item.amount : 100,
       merchantStatus: item.merchant_status,
+      focused: false
     })
   );
 

@@ -37,4 +37,5 @@ export type CorrectPointDataT = {
   isSeller: boolean;
   amount: number;
   merchantStatus: string;
+  focused: boolean;
 };
