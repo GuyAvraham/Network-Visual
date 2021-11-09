@@ -119,6 +119,7 @@ const Graph3D = ({
       },
 
       nodeLabel: (item: any) => item.id as string,
+
     }),
     [gData, lineColor, fgRef, isFocus, isFocusOnNodeNeeded]
   );
@@ -190,6 +191,7 @@ const Graph3D = ({
       linkOpacity={isFocus ? 1 : 0}
       linkLabel={() => `Line width: ${lineWidth}`}
       linkWidth={() => lineWidth}
+      
       //@ts-ignore
       nodeThreeObject={(item: any) =>
         returnCorrectGeometric(

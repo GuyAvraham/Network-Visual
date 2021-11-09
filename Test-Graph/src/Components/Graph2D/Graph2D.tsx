@@ -29,6 +29,7 @@ const Graph2D = ({
   colorForSeller,
   colorForBuyerAndSeller,
   colorForOther,
+  showAllLabels,
 }: GraphProps) => {
   const fgRef = useRef();
 
@@ -192,6 +193,7 @@ const Graph2D = ({
               colorForOther
             ) || returnCurrentNodeColor(node.forterStatus);
       ctx.fill();
+      ctx.fillText(showAllLabels ? node.id : "", node.x - 10, node.y - 5);
     },
     [
       hoverNode,
@@ -204,6 +206,7 @@ const Graph2D = ({
       colorForSeller,
       colorForBuyerAndSeller,
       colorForOther,
+      showAllLabels,
     ]
   );
   ////////

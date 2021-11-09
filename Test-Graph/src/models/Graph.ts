@@ -17,4 +17,5 @@ export type GraphProps = {
   colorForBuyerAndSeller: string;
   colorForOther: string;
   isFocusOnNodeNeeded?: boolean;
+  showAllLabels?: boolean
 };

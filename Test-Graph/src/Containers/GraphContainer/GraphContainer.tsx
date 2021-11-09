@@ -19,6 +19,7 @@ const GraphContainer = () => {
   const [show2DGraph, setShow2DGraph] = useState<boolean>(false);
   const [lineWidth, setLineWidth] = useState<number>(2);
   const [lineColor, setLineColor] = useState<string>("white");
+  const [showAllLabels, setShowAllLabels] = useState<boolean>(false);
 
   const [isFocusOnNodeNeeded, setIsFocusOnNodeNeeded] =
     useState<boolean>(false);
@@ -120,7 +121,7 @@ const GraphContainer = () => {
   return (
     <>
       {show2DGraph ? (
-        <Graph2D {...commonProps} />
+        <Graph2D {...commonProps} showAllLabels={showAllLabels} />
       ) : (
         <Graph3D {...commonProps} isFocusOnNodeNeeded={isFocusOnNodeNeeded} />
       )}
@@ -243,6 +244,15 @@ const GraphContainer = () => {
                   startFlickering ? "Stop" : "Start"
                 } flickering none active merchant`}
           </button>
+          <div>
+            <input
+              type="checkbox"
+              id="lablesCheckbox"
+              disabled={!show2DGraph}
+              onChange={() => setShowAllLabels(!showAllLabels)}
+            />
+            <label htmlFor="lablesCheckbox">Show all names</label>
+          </div>
         </div>
       </div>
     </>
