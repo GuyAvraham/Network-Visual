@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { memo, useRef, useState, useEffect, useMemo } from "react";
 import { ForceGraph3D } from "react-force-graph";
 import { Mesh, MeshLambertMaterial } from "three";
 
@@ -41,13 +34,14 @@ const Graph3D = ({
   colorForBuyerAndSeller,
   colorForOther,
   isFocusOnNodeNeeded,
+  zoomLevel,
 }: GraphProps) => {
   const fgRef = useRef<any>();
   const [isFlickering, setIsFlickering] = useState<boolean>(false);
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const infinitValue = true;
 
-  console.log(isFocus);
+  console.log(fgRef?.current);
 
   useEffect(() => {
     if (startFlickering) {
@@ -87,7 +81,7 @@ const Graph3D = ({
         3000 // ms transition duration
       );
     } else {
-      fgRef?.current.zoomToFit(3000);
+      fgRef?.current.zoomToFit(3000, -500 * zoomLevel!);
     }
   };
 
@@ -119,9 +113,8 @@ const Graph3D = ({
       },
 
       nodeLabel: (item: any) => item.id as string,
-
     }),
-    [gData, lineColor, fgRef, isFocus, isFocusOnNodeNeeded]
+    [gData, lineColor, fgRef, isFocus, isFocusOnNodeNeeded, zoomLevel]
   );
 
   const returnCorrectGeometric = (
@@ -191,7 +184,6 @@ const Graph3D = ({
       linkOpacity={isFocus ? 1 : 0}
       linkLabel={() => `Line width: ${lineWidth}`}
       linkWidth={() => lineWidth}
-      
       //@ts-ignore
       nodeThreeObject={(item: any) =>
         returnCorrectGeometric(

@@ -21,6 +21,8 @@ const GraphContainer = () => {
   const [lineColor, setLineColor] = useState<string>("white");
   const [showAllLabels, setShowAllLabels] = useState<boolean>(false);
 
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+
   const [isFocusOnNodeNeeded, setIsFocusOnNodeNeeded] =
     useState<boolean>(false);
 
@@ -98,6 +100,10 @@ const GraphContainer = () => {
     setColorForOther(data);
   };
 
+  const handleChangeZoomLevel = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setZoomLevel(e.target.value as number);
+  };
+
   const commonProps = {
     lineWidth,
     lineColor,
@@ -123,7 +129,11 @@ const GraphContainer = () => {
       {show2DGraph ? (
         <Graph2D {...commonProps} showAllLabels={showAllLabels} />
       ) : (
-        <Graph3D {...commonProps} isFocusOnNodeNeeded={isFocusOnNodeNeeded} />
+        <Graph3D
+          {...commonProps}
+          isFocusOnNodeNeeded={isFocusOnNodeNeeded}
+          zoomLevel={zoomLevel}
+        />
       )}
       <NodeDataPopup
         setIsPopupShow={setIsPopupShow}
@@ -145,6 +155,12 @@ const GraphContainer = () => {
             value={lineWidth}
             type="number"
             title="Line width input"
+          />
+          <InputComponent
+            handleChange={handleChangeZoomLevel}
+            value={zoomLevel}
+            type="number"
+            title="Change zoom level"
           />
           <SelectComponent
             value={lineColor}
@@ -200,13 +216,8 @@ const GraphContainer = () => {
               isShapeDisabled={show2DGraph}
             />
           </div>
+
           {/* <InputComponent
-            handleChange={handleChangeNodeSizeForBuyer}
-            value={nodeSizeForBuyer}
-            type="number"
-            title="Node size for buyers"
-          />
-          <InputComponent
             handleChange={handleChangeNodeSizeForSeller}
             value={nodeSizeForSeller}
             type="number"
